@@ -1,6 +1,9 @@
 var covid19Storage = new localStorageDB("Covid19Lib",localStorage);
+
+
 if (covid19Storage.isNew()) {
     covid19Storage.createTable("Info",["Country","Date","NewConfirmed","NewDeaths","NewRecovered","TotalConfirmed","TotalDeaths","TotalRecovered"]);
+    covid19Storage.createTable("InfoGlobal",["NewConfirmed","NewDeaths","NewRecovered","TotalConfirmed","TotalDeaths","TotalRecovered"]);
     covid19Storage.commit();
 }
 
@@ -8,46 +11,15 @@ window.onload=function()
 {
     //document.getElementById("buttonRefresh").addEventListener("click",updateLocalStorage);
     var heure = document.getElementById("heure");
-    heure.innerHTML = xhr.response.Global.Date;
-    var table = document.getElementById("table");
-    var cell = [];
-    for (let index = 0; index < covid19Storage.queryAll("Info").length; index++) {
-        //covid19Storage.insert("Info",{Country:xhr.response.Countries[index].Country,Date:xhr.response.Countries[index].Date,NewConfirmed:xhr.response.Countries[index].NewConfirmed,NewDeaths:xhr.response.Countries[index].NewDeaths,NewRecovered:xhr.response.Countries[index].NewRecovered,TotalConfirmed:xhr.response.Countries[index].TotalConfirmed,TotalRecovered:xhr.response.Countries[index].TotalRecovered,TotalDeaths:xhr.response.Countries[index].TotalDeaths});
-        var row = table.insertRow();
-            for (let j = 0; j < 7; j++) {
-                cell[j] = row.insertCell();
-            }
-            cell[0].innerHTML = `<td>${covid19Storage.queryAll("Info")[index].Country}`;
-            cell[1].innerHTML = `<td>${covid19Storage.queryAll("Info")[index].NewConfirmed}`;
-            cell[2].innerHTML = `<td>${covid19Storage.queryAll("Info")[index].NewDeaths}`;
-            cell[3].innerHTML = `<td>${covid19Storage.queryAll("Info")[index].NewRecovered}`;
-            cell[4].innerHTML = `<td>${covid19Storage.queryAll("Info")[index].TotalConfirmed}`;
-            cell[5].innerHTML = `<td>${covid19Storage.queryAll("Info")[index].TotalDeaths}`;
-            cell[6].innerHTML = `<td>${covid19Storage.queryAll("Info")[index].TotalRecovered}`;
-    }
+    var globalAffichage = document.getElementById("affichage");
+
+    covid.showCountriesInfo();
     console.log(covid19Storage.queryAll("Info"));
+    heure.innerHTML = covid19Storage.queryAll("Info")[0].Date;
+    globalAffichage.innerHTML = covid.showGlobalInfo(); 
+
 
 }
-
-
-function updateLocalStorage()
-{
-    covid19Storage.deleteRows("Info");    
-    covid19Storage.commit();
-    if (covid19Storage.isNew()) {
-        covid19Storage.createTable("Info",["Country","Date","NewConfirmed","NewDeaths","NewRecovered","TotalConfirmed","TotalDeaths","TotalRecovered"]);
-        covid19Storage.commit();
-    }
-    for (let index = 0; index < xhr.response.Countries.length; index++) {
-        covid19Storage.insert("Info",{Country:xhr.response.Countries[index].Country,Date:xhr.response.Countries[index].Date,NewConfirmed:xhr.response.Countries[index].NewConfirmed,NewDeaths:xhr.response.Countries[index].NewDeaths,NewRecovered:xhr.response.Countries[index].NewRecovered,TotalConfirmed:xhr.response.Countries[index].TotalConfirmed,TotalRecovered:xhr.response.Countries[index].TotalRecovered,TotalDeaths:xhr.response.Countries[index].TotalDeaths});
-        covid19Storage.commit();
-    }
-
-}
-
-
-console.log(covid19Storage.queryAll("Info"));
-
 
 var xhr = new XMLHttpRequest();
 xhr.open("GET","https://api.covid19api.com/summary",true);
@@ -55,6 +27,80 @@ xhr.open("GET","https://api.covid19api.com/summary",true);
 xhr.responseType = "json";
 xhr.send();
 
+let covid = {
+    
+    table : document.getElementById("table"),
+    showCountriesInfo()
+    {
+        var cell = [];
+        var row = table.insertRow();
+
+        for (let index = pagination.first; index < pagination.first + pagination.howManyElement; index++) {
+            //covid19Storage.insert("Info",{Country:xhr.response.Countries[index].Country,Date:xhr.response.Countries[index].Date,NewConfirmed:xhr.response.Countries[index].NewConfirmed,NewDeaths:xhr.response.Countries[index].NewDeaths,NewRecovered:xhr.response.Countries[index].NewRecovered,TotalConfirmed:xhr.response.Countries[index].TotalConfirmed,TotalRecovered:xhr.response.Countries[index].TotalRecovered,TotalDeaths:xhr.response.Countries[index].TotalDeaths});
+                row = table.insertRow();
+                for (let j = 0; j < 7; j++) {
+                    cell[j] = row.insertCell();
+                }
+                if (index < covid19Storage.queryAll("Info").length) {
+                    cell[0].innerHTML = `<td><a href="" class="btn btn-link">${covid19Storage.queryAll("Info")[index].Country}</a></td>`;
+                    cell[1].innerHTML = `<td>${covid19Storage.queryAll("Info")[index].NewConfirmed}</td>`;
+                    cell[2].innerHTML = `<td>${covid19Storage.queryAll("Info")[index].NewDeaths}</td>`;
+                    cell[3].innerHTML = `<td>${covid19Storage.queryAll("Info")[index].NewRecovered}</td>`;
+                    cell[4].innerHTML = `<td>${covid19Storage.queryAll("Info")[index].TotalConfirmed}</td>`;
+                    cell[5].innerHTML = `<td>${covid19Storage.queryAll("Info")[index].TotalDeaths}</td>`;
+                    cell[6].innerHTML = `<td>${covid19Storage.queryAll("Info")[index].TotalRecovered}</td>`;    
+                }
+                
+        }
+    
+    },
+    
+    showGlobalInfo(){
+        console.log(covid19Storage.queryAll("InfoGlobal"));
+        //console.log(covid19Storage.queryAll("InfoGlobal")[0].TotalConfirmed);
+         data = `
+          <td>${covid19Storage.queryAll("InfoGlobal")[0].TotalConfirmed}</td>
+          <td>${covid19Storage.queryAll("InfoGlobal")[0].TotalDeaths}</td>
+          <td>${covid19Storage.queryAll("InfoGlobal")[0].TotalRecovered}</td>
+          <td>${covid19Storage.queryAll("InfoGlobal")[0].NewConfirmed}</td>
+          <td>${covid19Storage.queryAll("InfoGlobal")[0].NewDeaths}</td>
+          <td>${covid19Storage.queryAll("InfoGlobal")[0].NewRecovered}</td>
+          `;
+         return data;
+    },
+    
+    
+    updateLocalStorage()
+    {
+        covid19Storage.deleteRows("Info");    
+        covid19Storage.deleteRows("InfoGlobal");    
+        covid19Storage.commit();
+        if (covid19Storage.isNew()) {
+            covid19Storage.createTable("Info",["Country","Date","NewConfirmed","NewDeaths","NewRecovered","TotalConfirmed","TotalDeaths","TotalRecovered"]);
+            covid19Storage.createTable("InfoGlobal",["NewConfirmed","NewDeaths","NewRecovered","TotalConfirmed","TotalDeaths","TotalRecovered"]);
+            covid19Storage.commit();
+        }
+        for (let index = 0; index < xhr.response.Countries.length; index++) {
+            covid19Storage.insert("Info",{Country:xhr.response.Countries[index].Country,Date:xhr.response.Countries[index].Date,NewConfirmed:xhr.response.Countries[index].NewConfirmed,NewDeaths:xhr.response.Countries[index].NewDeaths,NewRecovered:xhr.response.Countries[index].NewRecovered,TotalConfirmed:xhr.response.Countries[index].TotalConfirmed,TotalRecovered:xhr.response.Countries[index].TotalRecovered,TotalDeaths:xhr.response.Countries[index].TotalDeaths});
+        }
+    
+        covid19Storage.insert("InfoGlobal",{NewConfirmed:xhr.response.Global.NewConfirmed,NewDeaths:xhr.response.Global.NewDeaths,NewRecovered:xhr.response.Global.NewRecovered,TotalConfirmed:xhr.response.Global.TotalConfirmed,TotalRecovered:xhr.response.Global.TotalRecovered,TotalDeaths:xhr.response.Global.TotalDeaths});
+        covid19Storage.commit();
+        
+    
+    },
+    
+    
+    //console.log(covid19Storage.queryAll("Info"));
+    //console.log(covid19Storage.queryAll("InfoGlobal"));
+    
+  
 
 
-   
+}
+
+
+
+
+
+
