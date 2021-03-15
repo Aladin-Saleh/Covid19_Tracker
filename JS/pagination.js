@@ -12,14 +12,14 @@ howManyElement : 10,
         }
         else
         {
-            for (let index = 0; index < this.howManyElement; index++) {
-                document.getElementById("table").deleteRow(1);
+            for (let index = 0; index < 11; index++) {
+                document.getElementById("table").deleteRow(2);
             }
             this.currentPageNumber--;
             cSpan.innerHTML = this.currentPageNumber;
             this.first -= this.howManyElement;
            
-            console.log(this.first);
+            console.log("first "+this.first);
             covid.showCountriesInfo();
             
         }
@@ -27,18 +27,16 @@ howManyElement : 10,
 
     nextPage()
     {
-        for (let index = 0; index < this.howManyElement; index++) {
-            
-            document.getElementById("table").deleteRow(2);
-        }
+       
 
         cSpan = document.getElementById("numPage");
         this.currentPageNumber++;
+        for (let index = 0; index < 11; index++) {
+            document.getElementById("table").deleteRow(2);
+        }
         this.first += this.howManyElement;
-        
         cSpan.innerHTML = this.currentPageNumber;
-        console.log(this.first);
-       
+        console.log("first "+this.first);
         covid.showCountriesInfo();
     
     },

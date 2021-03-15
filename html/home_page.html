@@ -18,13 +18,13 @@
 <div style="text-align: center;">
 
   <button class="btn btn-primary" onclick="pagination.previousPage()">Précédent</button>
-  <span id="numPage" class="btn btn-success">1</span>
+  <div id="numPage" class="btn btn-success">1</div>
   <button class="btn btn-primary" onclick="pagination.nextPage()">Suivant</button>
 
 </div>
 <br>
 <div style="text-align: center;">
-  <button  id ="buttonRefresh" class="btn btn-outline-success" onclick="getCovidInformation()">Recharger les information</button>
+  <button  id ="buttonRefresh" class="btn btn-outline-success">Recharger les information</button>
 </div>
 <br>
 
@@ -53,6 +53,9 @@
           <th style="color:rgb(255, 0, 0)">Nombre total de cas</th>
           <th style="color:rgb(5, 0, 0)">Nombre total de mort</th>
           <th style="color:rgb(248, 2, 207)">Nombre total de cas soigner</th>
+
+        </tr>
+        <tr id="contTable">
 
         </tr>
       </table>

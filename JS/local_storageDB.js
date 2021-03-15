@@ -9,7 +9,7 @@ if (covid19Storage.isNew()) {
 
 window.onload=function()
 {
-    //document.getElementById("buttonRefresh").addEventListener("click",updateLocalStorage);
+    //document.getElementById("buttonRefresh").addEventListener("click",covid.updateLocalStorage);
     var heure = document.getElementById("heure");
     var globalAffichage = document.getElementById("affichage");
 
@@ -34,15 +34,15 @@ let covid = {
     {
         var cell = [];
         var row = table.insertRow();
-
-        for (let index = pagination.first; index < pagination.first + pagination.howManyElement; index++) {
+        console.log(pagination.howManyElement + pagination.first);
+        for (let index = pagination.first; index < pagination.howManyElement + pagination.first; index++) {
             //covid19Storage.insert("Info",{Country:xhr.response.Countries[index].Country,Date:xhr.response.Countries[index].Date,NewConfirmed:xhr.response.Countries[index].NewConfirmed,NewDeaths:xhr.response.Countries[index].NewDeaths,NewRecovered:xhr.response.Countries[index].NewRecovered,TotalConfirmed:xhr.response.Countries[index].TotalConfirmed,TotalRecovered:xhr.response.Countries[index].TotalRecovered,TotalDeaths:xhr.response.Countries[index].TotalDeaths});
                 row = table.insertRow();
                 for (let j = 0; j < 7; j++) {
                     cell[j] = row.insertCell();
                 }
                 if (index < covid19Storage.queryAll("Info").length) {
-                    cell[0].innerHTML = `<td><a href="" class="btn btn-link">${covid19Storage.queryAll("Info")[index].Country}</a></td>`;
+                    cell[0].innerHTML = `<td><a href="../html/country_info.html?country=${covid19Storage.queryAll("Info")[index].Country}" class="btn btn-link">${covid19Storage.queryAll("Info")[index].Country}</a></td>`;
                     cell[1].innerHTML = `<td>${covid19Storage.queryAll("Info")[index].NewConfirmed}</td>`;
                     cell[2].innerHTML = `<td>${covid19Storage.queryAll("Info")[index].NewDeaths}</td>`;
                     cell[3].innerHTML = `<td>${covid19Storage.queryAll("Info")[index].NewRecovered}</td>`;
@@ -57,7 +57,6 @@ let covid = {
     
     showGlobalInfo(){
         console.log(covid19Storage.queryAll("InfoGlobal"));
-        //console.log(covid19Storage.queryAll("InfoGlobal")[0].TotalConfirmed);
          data = `
           <td>${covid19Storage.queryAll("InfoGlobal")[0].TotalConfirmed}</td>
           <td>${covid19Storage.queryAll("InfoGlobal")[0].TotalDeaths}</td>
