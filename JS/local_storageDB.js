@@ -9,7 +9,7 @@ if (covid19Storage.isNew()) {
 
 window.onload=function()
 {
-    //document.getElementById("buttonRefresh").addEventListener("click",covid.updateLocalStorage);
+    document.getElementById("buttonRefresh").addEventListener("click",covid.updateLocalStorage);
     var heure = document.getElementById("heure");
     var globalAffichage = document.getElementById("affichage");
 
