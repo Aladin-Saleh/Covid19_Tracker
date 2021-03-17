@@ -109,7 +109,7 @@ let covid = {
         p.catch(error=>{
             console.error(error);
         })
-        
+            
         
     
     },

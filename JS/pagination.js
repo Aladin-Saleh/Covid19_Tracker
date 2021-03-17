@@ -1,14 +1,24 @@
+window.onload = function()
+{
+    pagination.init();
+}
+
+
 let pagination = {
 
 first : 0,
 currentPageNumber : 1,
-howManyElement : 10,
-
+howManyElement : null,
 
 
 
     
-
+    init()
+    {
+        this.howManyElement = document.getElementById("pays-affiche").value;
+        console.log(document.getElementById("pays-affiche").value);
+        
+    },
     previousPage()
     {
         cSpan = document.getElementById("numPage");
