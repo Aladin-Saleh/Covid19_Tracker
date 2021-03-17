@@ -9,7 +9,8 @@ if (covid19Storage.isNew()) {
 
 window.onload=function()
 {
-    document.getElementById("buttonRefresh").addEventListener("click",covid.updateLocalStorage);
+    //document.getElementById("buttonRefresh").addEventListener("click",covid.updateLocalStorage);
+    covid.updateLocalStorage()
     var heure = document.getElementById("heure");
     var globalAffichage = document.getElementById("affichage");
 
@@ -21,11 +22,7 @@ window.onload=function()
 
 }
 
-var xhr = new XMLHttpRequest();
-xhr.open("GET","https://api.covid19api.com/summary",true);
-//xhr.open("GET","../JSON/container.json",true);
-xhr.responseType = "json";
-xhr.send();
+
 
 let covid = {
     
@@ -71,20 +68,48 @@ let covid = {
     
     updateLocalStorage()
     {
-        covid19Storage.deleteRows("Info");    
-        covid19Storage.deleteRows("InfoGlobal");    
-        covid19Storage.commit();
-        if (covid19Storage.isNew()) {
-            covid19Storage.createTable("Info",["Country","Date","NewConfirmed","NewDeaths","NewRecovered","TotalConfirmed","TotalDeaths","TotalRecovered"]);
-            covid19Storage.createTable("InfoGlobal",["NewConfirmed","NewDeaths","NewRecovered","TotalConfirmed","TotalDeaths","TotalRecovered"]);
-            covid19Storage.commit();
-        }
-        for (let index = 0; index < xhr.response.Countries.length; index++) {
-            covid19Storage.insert("Info",{Country:xhr.response.Countries[index].Country,Date:xhr.response.Countries[index].Date,NewConfirmed:xhr.response.Countries[index].NewConfirmed,NewDeaths:xhr.response.Countries[index].NewDeaths,NewRecovered:xhr.response.Countries[index].NewRecovered,TotalConfirmed:xhr.response.Countries[index].TotalConfirmed,TotalRecovered:xhr.response.Countries[index].TotalRecovered,TotalDeaths:xhr.response.Countries[index].TotalDeaths});
-        }
+
+
+        let p = new Promise((resolve, reject) => {
+            let xhr = new XMLHttpRequest();
+            xhr.onerror = (() => {
+                reject("Erreur !")
+            })
+            xhr.ontimeout = (() => {
+                reject("Timeout !")
+            })
+        
+            xhr.responseType = "json"
+            xhr.timeout = 1000
+            xhr.onload = function() {
+                resolve(this.response);
+            }
+            xhr.open("GET","https://api.covid19api.com/summary",true);
+            xhr.send();
+        })
     
-        covid19Storage.insert("InfoGlobal",{NewConfirmed:xhr.response.Global.NewConfirmed,NewDeaths:xhr.response.Global.NewDeaths,NewRecovered:xhr.response.Global.NewRecovered,TotalConfirmed:xhr.response.Global.TotalConfirmed,TotalRecovered:xhr.response.Global.TotalRecovered,TotalDeaths:xhr.response.Global.TotalDeaths});
-        covid19Storage.commit();
+        p.then(response =>
+            {
+                console.log(response.Countries);
+                covid19Storage.deleteRows("Info");    
+                covid19Storage.deleteRows("InfoGlobal");    
+                covid19Storage.commit();
+                if (covid19Storage.isNew()) {
+                    covid19Storage.createTable("Info",["Country","Date","NewConfirmed","NewDeaths","NewRecovered","TotalConfirmed","TotalDeaths","TotalRecovered"]);
+                    covid19Storage.createTable("InfoGlobal",["NewConfirmed","NewDeaths","NewRecovered","TotalConfirmed","TotalDeaths","TotalRecovered"]);
+                    covid19Storage.commit();
+                }
+                for (let index = 0; index < response.Countries.length; index++) {
+                    covid19Storage.insert("Info",{Country:response.Countries[index].Country,Date:response.Countries[index].Date,NewConfirmed:response.Countries[index].NewConfirmed,NewDeaths:response.Countries[index].NewDeaths,NewRecovered:response.Countries[index].NewRecovered,TotalConfirmed:response.Countries[index].TotalConfirmed,TotalRecovered:response.Countries[index].TotalRecovered,TotalDeaths:response.Countries[index].TotalDeaths});
+                }
+            
+                covid19Storage.insert("InfoGlobal",{NewConfirmed:response.Global.NewConfirmed,NewDeaths:response.Global.NewDeaths,NewRecovered:response.Global.NewRecovered,TotalConfirmed:response.Global.TotalConfirmed,TotalRecovered:response.Global.TotalRecovered,TotalDeaths:response.Global.TotalDeaths});
+                covid19Storage.commit();
+            })
+        p.catch(error=>{
+            console.error(error);
+        })
+        
         
     
     },
@@ -94,10 +119,9 @@ let covid = {
     //console.log(covid19Storage.queryAll("InfoGlobal"));
     
   
-
+   
 
 }
-
 
 
 

@@ -4,6 +4,11 @@ first : 0,
 currentPageNumber : 1,
 howManyElement : 10,
 
+
+
+
+    
+
     previousPage()
     {
         cSpan = document.getElementById("numPage");
@@ -28,16 +33,23 @@ howManyElement : 10,
     nextPage()
     {
        
-
-        cSpan = document.getElementById("numPage");
-        this.currentPageNumber++;
-        for (let index = 0; index < 11; index++) {
-            document.getElementById("table").deleteRow(2);
+        if (this.currentPageNumber == 19) {
+            alert("Vous êtes sur la derniere page !");
         }
-        this.first += this.howManyElement;
-        cSpan.innerHTML = this.currentPageNumber;
-        console.log("first "+this.first);
-        covid.showCountriesInfo();
+        else
+        {
+            cSpan = document.getElementById("numPage");
+            this.currentPageNumber++;
+            for (let index = 0; index < 11; index++) {
+                document.getElementById("table").deleteRow(2);
+            }
+            this.first += this.howManyElement;
+            cSpan.innerHTML = this.currentPageNumber;
+            console.log("first "+this.first);
+            covid.showCountriesInfo();
+        }
+
+      
     
     },
 
