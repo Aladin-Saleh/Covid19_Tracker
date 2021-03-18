@@ -8,15 +8,22 @@ let pagination = {
 
 first : 0,
 currentPageNumber : 1,
-howManyElement : null,
+howManyElement : 10,
 
 
 
     
     init()
     {
-        this.howManyElement = document.getElementById("pays-affiche").value;
-        console.log(document.getElementById("pays-affiche").value);
+      if (this.howManyElement != document.getElementById("pays-affiche").value) {
+        
+        for (let index = 0; index < this.howManyElement + 1; index++) {
+            document.getElementById("table").deleteRow(1);
+        }
+        this.howManyElement = document.getElementById("pays-affiche").value
+        covid.showCountriesInfo();
+
+      }
         
     },
     previousPage()
@@ -27,8 +34,8 @@ howManyElement : null,
         }
         else
         {
-            for (let index = 0; index < 11; index++) {
-                document.getElementById("table").deleteRow(2);
+            for (let index = 0; index < this.howManyElement+1; index++) {
+                document.getElementById("table").deleteRow(1);
             }
             this.currentPageNumber--;
             cSpan.innerHTML = this.currentPageNumber;
@@ -43,15 +50,15 @@ howManyElement : null,
     nextPage()
     {
        
-        if (this.currentPageNumber == 19) {
+        if (this.currentPageNumber == Math.ceil(190/this.howManyElement)) {
             alert("Vous êtes sur la derniere page !");
         }
         else
         {
             cSpan = document.getElementById("numPage");
             this.currentPageNumber++;
-            for (let index = 0; index < 11; index++) {
-                document.getElementById("table").deleteRow(2);
+            for (let index = 0; index < this.howManyElement+1; index++) {
+                document.getElementById("table").deleteRow(1);
             }
             this.first += this.howManyElement;
             cSpan.innerHTML = this.currentPageNumber;
