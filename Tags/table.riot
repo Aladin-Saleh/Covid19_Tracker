@@ -1,7 +1,7 @@
 <tableaucovid>
     <table class ="table table-hover" id="table" style="text-align:center;">
           <!--<th style={item.color} each={ item in state.items } >{item.title}</th>-->
-      <th style="color:rgb(219, 153, 10)">Pays</th>
+      <th style="color:rgb(219, 153, 10)" onclick={reverse}>Pays</th>
           <th style="color:blue">Nombre de nouveau cas</th>
           <th style="color:red">Nombre de nouveau mort</th>
           <th style="color:green">Nombre de nouveau cas soigner</th>
@@ -30,8 +30,14 @@
             onBeforeUpdate(props, state)
             {
                 state.tableauFiltre = state.tableauxGlobal.filter(item => item["Country"].toLowerCase().includes(state.filtertable.getPays().toLowerCase()));
-                //state.tableauFiltre = state.tableauxGlobal.reverse();
+                
                 console.log(state.tableauFiltre)
+            },
+            reverse()
+            {
+                this.state.tableauFiltre = this.state.tableauxGlobal.reverse();
+                console.log(this.state.tableauFiltre)
+                this.update();
             },
             state: {
                 filtertable: null,
