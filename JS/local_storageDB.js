@@ -9,13 +9,11 @@ if (covid19Storage.isNew()) {
 
 window.onload=function()
 {
-    //document.getElementById("buttonRefresh").addEventListener("click",covid.updateLocalStorage);
-    covid.updateLocalStorage()
+        covid.updateLocalStorage()
     var heure = document.getElementById("heure");
     var globalAffichage = document.getElementById("affichage");
 
-    covid.showCountriesInfo();
-    console.log(covid19Storage.queryAll("Info"));
+    //console.log(covid19Storage.queryAll("Info"));
     heure.innerHTML = covid19Storage.queryAll("Info")[0].Date;
     globalAffichage.innerHTML = covid.showGlobalInfo(); 
 
@@ -45,15 +43,20 @@ let covid = {
                     cell[3].innerHTML = `<td>${covid19Storage.queryAll("Info")[index].NewRecovered}</td>`;
                     cell[4].innerHTML = `<td>${covid19Storage.queryAll("Info")[index].TotalConfirmed}</td>`;
                     cell[5].innerHTML = `<td>${covid19Storage.queryAll("Info")[index].TotalDeaths}</td>`;
-                    cell[6].innerHTML = `<td>${covid19Storage.queryAll("Info")[index].TotalRecovered}</td>`;    
+                    cell[6].innerHTML = `<td>${covid19Storage.queryAll("Info")[index].TotalRecovered}</td>`;
                 }
                 
         }
     
     },
-    
+
+    getCountryInfo()
+    {
+        return covid19Storage.queryAll("Info")
+    },
+
     showGlobalInfo(){
-        console.log(covid19Storage.queryAll("InfoGlobal"));
+        //console.log(covid19Storage.queryAll("InfoGlobal"));
          data = `
           <td>${covid19Storage.queryAll("InfoGlobal")[0].TotalConfirmed}</td>
           <td>${covid19Storage.queryAll("InfoGlobal")[0].TotalDeaths}</td>

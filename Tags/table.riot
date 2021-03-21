@@ -1,0 +1,42 @@
+<tableaucovid>
+    <table class ="table table-hover" id="table" style="text-align:center;">
+          <!--<th style={item.color} each={ item in state.items } >{item.title}</th>-->
+      <th style="color:rgb(219, 153, 10)">Pays</th>
+          <th style="color:blue">Nombre de nouveau cas</th>
+          <th style="color:red">Nombre de nouveau mort</th>
+          <th style="color:green">Nombre de nouveau cas soigner</th>
+          <th style="color:rgb(0, 0, 0)">Nombre total de cas</th>
+          <th style="color:rgb(255, 0, 0)">Nombre total de mort</th>
+        <th style="color:rgb(248, 2, 207)">Nombre total de cas soigner</th>
+
+
+        <tr each={ tab in state.tableauFiltre }>
+                <th class=""><a href="../html/country_info.html?country={tab["Country"]}"</a>{ tab["Country"] }</th>
+                <th class="">{ tab["NewConfirmed"] }</th>
+                <th class="">{ tab["NewDeaths"] }</th>
+                <th class="">{ tab["NewRecovered"] }</th>
+                <th class="">{ tab["TotalConfirmed"] }</th>
+                <th class="">{ tab["TotalDeaths"] }</th>
+                <th class="">{ tab["TotalRecovered"] }</th>
+          </tr>
+      </table>
+    <script>
+        export default {
+            onBeforeMount(props, state) {
+               state.filtertable = props.filtertable;
+               state.tableauxGlobal = covid.getCountryInfo();
+               state.tableauFiltre = state.tableauxGlobal;
+            },
+            onBeforeUpdate(props, state)
+            {
+                state.tableauFiltre = state.tableauxGlobal.filter(item => item["Country"].toLowerCase().includes(state.filtertable.getPays().toLowerCase()));
+                console.log(state.tableauFiltre)
+            },
+            state: {
+                filtertable: null,
+                tableauxGlobal: [],
+                tableauFiltre : []
+            }
+        }
+    </script>
+</tableaucovid>

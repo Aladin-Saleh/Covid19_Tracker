@@ -1,0 +1,52 @@
+<tabfilter>
+<div style="text-align:center;">
+
+<div style="text-align: center;">
+        <button class="btn btn-primary" onclick={previous}>Précédent</button>
+        <div id="numPage" class="btn btn-success">1</div>
+        <button class="btn btn-primary" onclick={next}>Suivant</button>
+</div>
+<br>
+<br>
+
+<input type="text" oninput={searchPays} placeholder="Rechercher un pays..." class="filter-input" class="form-control rounded" >
+
+          <select name="pays-affiche" id="pays-affiche" onclick="pagination.init()">
+              <option value={item.value} each={ item in state.selects }>{item.text}</option>
+          </select>
+</div>
+
+
+    <script>
+        export default {
+            onBeforeMount(props, state) {
+               state.filtertable = props.filtertable;
+               state.updateAll = props.updateall;
+               state.nombrePage = Math.ceil(190/this.state.filtertable.getNombrePage());
+
+            },
+            onBeforeUpdate(props, state) {
+            },
+            state: {
+                filtertable: [],
+                updateAll: null,
+                nombrePage :10
+            },
+            searchPays()
+            {
+               this.state.filtertable.setPays(this.$('input').value);
+               this.state.updateAll();
+            },
+            previous()
+            {
+
+            },
+            next()
+            {
+
+            }
+        
+        }
+    </script>
+
+</tabfilter> 

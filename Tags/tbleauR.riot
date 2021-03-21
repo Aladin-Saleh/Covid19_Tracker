@@ -1,0 +1,22 @@
+<tbleauR>
+
+<tabfilter updateall={ updateAll } filtertable={ state.filtertable } ></tabfilter>
+<tableaucovid  filtertable={ state.filtertable } ></tableaucovid>
+
+
+
+    <script>
+        export default {
+            onBeforeMount(props, state) {
+               state.filtertable = this.filtert;
+            },
+            state: {
+                filtertable: null
+            },
+            updateAll()
+            {
+                this.update();
+            }
+        }
+    </script>
+</tbleauR>

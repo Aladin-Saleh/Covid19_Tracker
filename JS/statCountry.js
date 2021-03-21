@@ -22,6 +22,9 @@ function initCanvas(response)
 	Val_min = -20;
 	var columnSize = 1;
 	var rowSize = 1;
+
+  
+
     //Courbe
 	yScale = (canvas.height - columnSize ) / (Val_max - Val_min);
 	xScale = (canvas.width - rowSize) / 12;
@@ -36,9 +39,10 @@ function initCanvas(response)
        console.log(response[index].Cases);
         c.lineTo(index*3,response[index].Cases);
     }
+    c.strokeStyle = "#FF0000";
+    c.lineWidth = 10
     c.stroke();
 }
-
 
 
 let p = new Promise((resolve, reject) => {
@@ -55,12 +59,36 @@ let p = new Promise((resolve, reject) => {
     xhr.onload = function() {
         resolve(this.response);
     }
-    xhr.open("GET","https://api.covid19api.com/country/"+pays+"/status/confirmed?from=2020-03-01T00:00:00Z&to=2021-04-01T00:00:00Z",true);
+    var ladate=new Date()
+    document.write(ladate.getDate()+"/"+(ladate.getMonth()+1)+"/"+ladate.getFullYear())
+    //console.log(ladate.getFullYear()+"-"+(ladate.getMonth()+1)+"-"+(ladate.getDate()-7)+"T00:00:00Z");
+    //console.log(ladate.getFullYear()+"-0"+(ladate.getMonth()+1)+"-"+(ladate.getDate()-15)+"T00:00:00Z");
+    let date;
+    if (ladate.getMonth()+1 < 10 && ladate.getDate()-7 < 10 ) {
+        date = ladate.getFullYear()+"-0"+(ladate.getMonth()+1)+"-0"+(ladate.getDate()-7)+"T00:00:00Z";
+    }
+    else if (ladate.getMonth()+1 < 10) {
+        date = ladate.getFullYear()+"-0"+(ladate.getMonth()+1)+"-"+(ladate.getDate()-7)+"T00:00:00Z";
+    }
+    
+    else if (ladate.getDate()-7 < 10) {
+        date = ladate.getFullYear()+"-"+(ladate.getMonth()+1)+"-0"+(ladate.getDate()-7)+"T00:00:00Z";
+    }
+    else
+    {
+        date = ladate.getFullYear()+"-"+(ladate.getMonth()+1)+"-"+(ladate.getDate()-7)+"T00:00:00Z";
+    }
+
+    console.log(date);
+
+    xhr.open("GET","https://api.covid19api.com/country/"+pays+"/status/confirmed?from="+date+"&to=2021-03-21T00:00:00Z",true);
 
     xhr.send();
 })
 p.then(response =>
     {
+        let i = (response.length) - 7;
+        console.log(response[i].Date);
         initCanvas(response);
     })
 p.catch(error=>{

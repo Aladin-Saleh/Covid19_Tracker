@@ -10,8 +10,6 @@ first : 0,
 currentPageNumber : 1,
 howManyElement : 10,
 
-
-
     
     init()
     {
