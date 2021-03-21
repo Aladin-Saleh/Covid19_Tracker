@@ -30,6 +30,7 @@
             onBeforeUpdate(props, state)
             {
                 state.tableauFiltre = state.tableauxGlobal.filter(item => item["Country"].toLowerCase().includes(state.filtertable.getPays().toLowerCase()));
+                //state.tableauFiltre = state.tableauxGlobal.reverse();
                 console.log(state.tableauFiltre)
             },
             state: {
