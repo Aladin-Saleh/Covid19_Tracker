@@ -11,8 +11,11 @@
 
 <input type="text" oninput={searchPays} placeholder="Rechercher un pays..." class="filter-input" class="form-control rounded" >
 
-          <select name="pays-affiche" id="pays-affiche" onclick="pagination.init()">
-              <option value={item.value} each={ item in state.selects }>{item.text}</option>
+          <select name="pays-affiche" id="pays-affiche" oninput={updatePaysAffiche}>
+            <option value="2">20</option>
+            <option value="5">50</option>
+            <option value="10">100</option>
+            <option value="19">Tout afficher</option>
           </select>
 </div>
 
@@ -22,31 +25,46 @@
             onBeforeMount(props, state) {
                state.filtertable = props.filtertable;
                state.updateAll = props.updateall;
-               state.nombrePage = Math.ceil(190/this.state.filtertable.getNombrePage());
-
+               state.currentPage = state.filtertable.getCurrentPage();
             },
             onBeforeUpdate(props, state) {
+
             },
+
             state: {
                 filtertable: [],
                 updateAll: null,
-                nombrePage :10
+                nombrePage :10,
+                nombreElement :20,
+                currentPage : 0
             },
             searchPays()
             {
                this.state.filtertable.setPays(this.$('input').value);
                this.state.updateAll();
             },
+            updatePaysAffiche()
+            {
+               //console.log("debug uPA")
+               //console.log(document.getElementById("pays-affiche").value);
+               this.state.filtertable.setNombreElement(document.getElementById("pays-affiche").value)
+               this.state.updateAll();
+
+            },
             previous()
             {
+                console.log("prev")
 
             },
             next()
             {
+                console.log("next")
+                this.state.currentPage += this.state.filtertable.getNombreElement() +1;
+                this.state.filtertable.setCurrentPage(this.state.currentPage);
+                this.state.updateAll();
 
             }
-        
         }
     </script>
 
-</tabfilter> 
+</tabfilter>

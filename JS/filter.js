@@ -9,11 +9,32 @@ class filter{
         this.currentPage = 0;
         this.nombrePage = 10;
         this.nombreElement = 20;
+        this.nombrePays = 190;
     }
 
 
+    getNombrePays()
+    {
+        return this.nombrePays;
+    }
 
-    getPays() {
+    setNombrePays(newNP)
+    {
+        this.nombrePage = newNP;
+    }
+
+    getCurrentPage()
+    {
+        return this.currentPage;
+    }
+
+    setCurrentPage(curPage)
+    {
+        this.currentPage = curPage;
+    }
+
+    getPays()
+    {
         return this.pays;
     }
 
@@ -32,6 +53,10 @@ class filter{
         return this.nombreElement;
     }
 
+    setNombreElement(nElem)
+    {
+        this.nombreElement = nElem;
+    }
     getNombrePage()
     {
         return this.nombrePage;

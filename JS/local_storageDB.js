@@ -24,26 +24,26 @@ window.onload=function()
 
 let covid = {
     
-    table : document.getElementById("table"),
+   // table : document.getElementById("table"),
     showCountriesInfo()
     {
-        var cell = [];
-        var row = table.insertRow();
-        console.log(pagination.howManyElement + pagination.first);
+        //var cell = [];
+        //var row = table.insertRow();
+        //console.log(pagination.howManyElement + pagination.first);
         for (let index = pagination.first; index < pagination.howManyElement + pagination.first; index++) {
             //covid19Storage.insert("Info",{Country:xhr.response.Countries[index].Country,Date:xhr.response.Countries[index].Date,NewConfirmed:xhr.response.Countries[index].NewConfirmed,NewDeaths:xhr.response.Countries[index].NewDeaths,NewRecovered:xhr.response.Countries[index].NewRecovered,TotalConfirmed:xhr.response.Countries[index].TotalConfirmed,TotalRecovered:xhr.response.Countries[index].TotalRecovered,TotalDeaths:xhr.response.Countries[index].TotalDeaths});
-                row = table.insertRow();
+                //row = table.insertRow();
                 for (let j = 0; j < 7; j++) {
-                    cell[j] = row.insertCell();
+                    //cell[j] = row.insertCell();
                 }
                 if (index < covid19Storage.queryAll("Info").length) {
-                    cell[0].innerHTML = `<td><a href="../html/country_info.html?country=${covid19Storage.queryAll("Info")[index].Country}" class="btn btn-link">${covid19Storage.queryAll("Info")[index].Country}</a></td>`;
+                /*    cell[0].innerHTML = `<td><a href="../html/country_info.html?country=${covid19Storage.queryAll("Info")[index].Country}" class="btn btn-link">${covid19Storage.queryAll("Info")[index].Country}</a></td>`;
                     cell[1].innerHTML = `<td>${covid19Storage.queryAll("Info")[index].NewConfirmed}</td>`;
                     cell[2].innerHTML = `<td>${covid19Storage.queryAll("Info")[index].NewDeaths}</td>`;
                     cell[3].innerHTML = `<td>${covid19Storage.queryAll("Info")[index].NewRecovered}</td>`;
                     cell[4].innerHTML = `<td>${covid19Storage.queryAll("Info")[index].TotalConfirmed}</td>`;
                     cell[5].innerHTML = `<td>${covid19Storage.queryAll("Info")[index].TotalDeaths}</td>`;
-                    cell[6].innerHTML = `<td>${covid19Storage.queryAll("Info")[index].TotalRecovered}</td>`;
+                    cell[6].innerHTML = `<td>${covid19Storage.queryAll("Info")[index].TotalRecovered}</td>`;*/
                 }
                 
         }
@@ -93,7 +93,7 @@ let covid = {
     
         p.then(response =>
             {
-                console.log(response.Countries);
+                //console.log(response.Countries);
                 covid19Storage.deleteRows("Info");    
                 covid19Storage.deleteRows("InfoGlobal");    
                 covid19Storage.commit();

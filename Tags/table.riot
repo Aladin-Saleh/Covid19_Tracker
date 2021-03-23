@@ -24,25 +24,58 @@
         export default {
             onBeforeMount(props, state) {
                state.filtertable = props.filtertable;
-               state.tableauxGlobal = covid.getCountryInfo();
-               state.tableauFiltre = state.tableauxGlobal;
+               state.tableauBuf = covid.getCountryInfo();
+               //console.log(state.filtertable.getNombreElement())
+               console.log(state.filtertable.getCurrentPage())
+               state.nombreElement = state.filtertable.getNombreElement();
+               for(let i = state.filtertable.getCurrentPage(); i <state.nombreElement; i++)
+                {
+                   state.tableauxGlobal[i] = covid.getCountryInfo()[i];
+                }
+               state.tableauFiltre =state.tableauxGlobal;
             },
             onBeforeUpdate(props, state)
             {
-                state.tableauFiltre = state.tableauxGlobal.filter(item => item["Country"].toLowerCase().includes(state.filtertable.getPays().toLowerCase()));
+                state.tableauFiltre = state.tableauBuf.filter(item => item["Country"].toLowerCase().includes(state.filtertable.getPays().toLowerCase()));
+                if(state.nombreElement != state.filtertable.getNombreElement())
+                {
+                    console.log("debug")
+                    state.nombreElement = state.filtertable.getNombreElement();
+                    //state.tableauxGlobal = [];
+                     for(let i = state.filtertable.getCurrentPage(); i <state.nombreElement + state.filtertable.getCurrentPage(); i++)
+                        {
+                            state.tableauxGlobal[i] = covid.getCountryInfo()[i];
+                        }
+                    state.tableauFiltre =state.tableauxGlobal;
+                }
+
+                    console.log("next debug");
+                    state.currentPage = state.filtertable.getCurrentPage();
+                    let bufTab = [];
+                    bufTab = state.tableauFiltre;
+                    state.tableauFiltre = [];
+                     for(let i = state.filtertable.getCurrentPage(); i <state.nombreElement + state.filtertable.getCurrentPage(); i++)
+                      {
+                        state.tableauFiltre.push(bufTab[i]); 
+                      }
+                    //state.tableauFiltre =state.tableauxGlobal;
+                    console.log(state.filtertable.getCurrentPage());
+                    console.log(state.nombreElement + state.filtertable.getCurrentPage());
                 
-                console.log(state.tableauFiltre)
             },
             reverse()
             {
                 this.state.tableauFiltre = this.state.tableauxGlobal.reverse();
-                console.log(this.state.tableauFiltre)
                 this.update();
             },
             state: {
                 filtertable: null,
                 tableauxGlobal: [],
-                tableauFiltre : []
+                tableauFiltre : [],
+                tableauBuf : [],
+                nombreElement : 20,
+                currentPage : 0
+                
             }
         }
     </script>
