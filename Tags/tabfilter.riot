@@ -3,19 +3,17 @@
 
 <div style="text-align: center;">
         <button class="btn btn-primary" onclick={previous}>Précédent</button>
-        <div id="numPage" class="btn btn-success">1</div>
+        <div id="numPage" class="btn btn-success">{state.currentPage +1}</div>
         <button class="btn btn-primary" onclick={next}>Suivant</button>
 </div>
 <br>
 <br>
 
 <input type="text" oninput={searchPays} placeholder="Rechercher un pays..." class="filter-input" class="form-control rounded" >
-
           <select name="pays-affiche" id="pays-affiche" oninput={updatePaysAffiche}>
-            <option value="2">20</option>
-            <option value="5">50</option>
-            <option value="10">100</option>
-            <option value="19">Tout afficher</option>
+            <option value="20">20</option>
+            <option value="95">95</option>
+            <option value="190">Tout afficher</option>
           </select>
 </div>
 
@@ -28,15 +26,15 @@
                state.currentPage = state.filtertable.getCurrentPage();
             },
             onBeforeUpdate(props, state) {
-
             },
-
             state: {
                 filtertable: [],
                 updateAll: null,
                 nombrePage :10,
                 nombreElement :20,
-                currentPage : 0
+                currentPage : 1,
+                first : 0,
+                maxPage : 10
             },
             searchPays()
             {
@@ -48,20 +46,33 @@
                //console.log("debug uPA")
                //console.log(document.getElementById("pays-affiche").value);
                this.state.filtertable.setNombreElement(document.getElementById("pays-affiche").value)
+               this.state.maxPage = Math.ceil(this.state.filtertable.getNombrePays()/this.state.filtertable.getNombreElement())
+               console.log( this.state.maxPage)
                this.state.updateAll();
 
             },
             previous()
             {
                 console.log("prev")
+                if(this.state.currentPage != 0)
+                {
+                this.state.first -= this.state.filtertable.getNombreElement();
+                this.state.filtertable.setFirst(this.state.first);
+                this.state.filtertable.setCurrentPage(this.state.currentPage--)
+                this.state.updateAll();
+                }
 
             },
             next()
             {
-                console.log("next")
-                this.state.currentPage += this.state.filtertable.getNombreElement() +1;
-                this.state.filtertable.setCurrentPage(this.state.currentPage);
-                this.state.updateAll();
+                if(this.state.currentPage != this.state.maxPage)
+                {
+                    console.log("next")
+                    this.state.first += parseInt(this.state.filtertable.getNombreElement(),10);
+                    this.state.filtertable.setFirst(this.state.first);
+                    this.state.filtertable.setCurrentPage(this.state.currentPage++)
+                    this.state.updateAll();
+                }
 
             }
         }

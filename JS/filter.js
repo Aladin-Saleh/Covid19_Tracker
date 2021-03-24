@@ -6,12 +6,23 @@ class filter{
     constructor()
     {
         this.pays = "";
-        this.currentPage = 0;
+        this.first = 0;
         this.nombrePage = 10;
         this.nombreElement = 20;
         this.nombrePays = 190;
+        this.currentPage = 0;
     }
 
+    
+    getCurrentPage()
+    {
+        return this.currentPage;
+    }
+
+    setCurrentPage(newNP)
+    {
+        this.currentPage = newNP;
+    }
 
     getNombrePays()
     {
@@ -23,14 +34,14 @@ class filter{
         this.nombrePage = newNP;
     }
 
-    getCurrentPage()
+    getFirst()
     {
-        return this.currentPage;
+        return this.first;
     }
 
-    setCurrentPage(curPage)
+    setFirst(f)
     {
-        this.currentPage = curPage;
+        this.first = f;
     }
 
     getPays()

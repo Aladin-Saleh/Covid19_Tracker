@@ -1,72 +1,113 @@
 <tableaucovid>
     <table class ="table table-hover" id="table" style="text-align:center;">
           <!--<th style={item.color} each={ item in state.items } >{item.title}</th>-->
-      <th style="color:rgb(219, 153, 10)" onclick={reverse}>Pays</th>
-          <th style="color:blue">Nombre de nouveau cas</th>
-          <th style="color:red">Nombre de nouveau mort</th>
-          <th style="color:green">Nombre de nouveau cas soigner</th>
-          <th style="color:rgb(0, 0, 0)">Nombre total de cas</th>
-          <th style="color:rgb(255, 0, 0)">Nombre total de mort</th>
-        <th style="color:rgb(248, 2, 207)">Nombre total de cas soigner</th>
-
+      <th id="Country" style="color:rgb(219, 153, 10)" onclick={sort} class="sorted">Pays</th>
+          <th id="NewConfirmed" style="color:blue" onclick={sort}>Nombre de nouveau cas</th>
+          <th id="NewDeaths" style="color:red" onclick={sort}>Nombre de nouveau mort</th>
+          <th id="NewRecovered" style="color:green" onclick={sort}>Nombre de nouveau cas soigner</th>
+          <th id="TotalConfirmed" style="color:rgb(0, 0, 0)" onclick={sort}>Nombre total de cas</th>
+          <th id="TotalDeaths" style="color:rgb(255, 0, 0)" onclick={sort}>Nombre total de mort</th>
+        <th id="TotalRecovered" style="color:rgb(248, 2, 207)" onclick={sort}>Nombre total de cas soigner</th>
 
         <tr each={ tab in state.tableauFiltre }>
-                <th class=""><a href="../html/country_info.html?country={tab["Country"]}"</a>{ tab["Country"] }</th>
-                <th class="">{ tab["NewConfirmed"] }</th>
-                <th class="">{ tab["NewDeaths"] }</th>
-                <th class="">{ tab["NewRecovered"] }</th>
-                <th class="">{ tab["TotalConfirmed"] }</th>
-                <th class="">{ tab["TotalDeaths"] }</th>
-                <th class="">{ tab["TotalRecovered"] }</th>
+                <td ><a href="../html/country_info.html?country={tab["Country"]}"</a>{ tab["Country"] }</td>
+                <td >{ tab["NewConfirmed"] }</td>
+                <td >{ tab["NewDeaths"] }</td>
+                <td >{ tab["NewRecovered"] }</td>
+                <td >{ tab["TotalConfirmed"] }</td>
+                <td >{ tab["TotalDeaths"] }</td>
+                <td >{ tab["TotalRecovered"] }</td>
           </tr>
       </table>
     <script>
         export default {
             onBeforeMount(props, state) {
                state.filtertable = props.filtertable;
-               state.tableauBuf = covid.getCountryInfo();
-               //console.log(state.filtertable.getNombreElement())
-               console.log(state.filtertable.getCurrentPage())
+               state.tableauxGlobal = covid.getCountryInfo();
+               console.log(state.filtertable.getFirst())
                state.nombreElement = state.filtertable.getNombreElement();
-               for(let i = state.filtertable.getCurrentPage(); i <state.nombreElement; i++)
+               for(let i = state.filtertable.getFirst(); i <state.nombreElement; i++)
                 {
-                   state.tableauxGlobal[i] = covid.getCountryInfo()[i];
+                   state.tableauBuf[i] = covid.getCountryInfo()[i];
                 }
-               state.tableauFiltre =state.tableauxGlobal;
+               state.tableauFiltre =state.tableauBuf;
             },
             onBeforeUpdate(props, state)
             {
-                state.tableauFiltre = state.tableauBuf.filter(item => item["Country"].toLowerCase().includes(state.filtertable.getPays().toLowerCase()));
+                state.tableauFiltre = state.tableauxGlobal.filter(item => item["Country"].toLowerCase().includes(state.filtertable.getPays().toLowerCase()));
+
                 if(state.nombreElement != state.filtertable.getNombreElement())
                 {
-                    console.log("debug")
                     state.nombreElement = state.filtertable.getNombreElement();
-                    //state.tableauxGlobal = [];
-                     for(let i = state.filtertable.getCurrentPage(); i <state.nombreElement + state.filtertable.getCurrentPage(); i++)
+                     let bufTab = [];
+                    bufTab = state.tableauFiltre;
+                    state.tableauFiltre = [];
+                    //console.log(parseInt(state.nombreElement,10) + parseInt(state.filtertable.getFirst(),10))
+                     for(let i = 0; i <parseInt(state.nombreElement,10); i++)
                         {
-                            state.tableauxGlobal[i] = covid.getCountryInfo()[i];
+                            //state.tableauFiltre[i] = covid.getCountryInfo()[i];
+                            state.tableauFiltre.push(covid.getCountryInfo()[i]);
                         }
-                    state.tableauFiltre =state.tableauxGlobal;
+                        console.log(this.state.first)
+                   //state.tableauFiltre =state.tableauxGlobal;
                 }
 
-                    console.log("next debug");
-                    state.currentPage = state.filtertable.getCurrentPage();
+                if(state.first != state.filtertable.getFirst())
+                {
+                    //console.log("next debug");
+                    state.first = state.filtertable.getFirst();
                     let bufTab = [];
                     bufTab = state.tableauFiltre;
                     state.tableauFiltre = [];
-                     for(let i = state.filtertable.getCurrentPage(); i <state.nombreElement + state.filtertable.getCurrentPage(); i++)
+                    
+                     for(let i = state.filtertable.getFirst(); i <parseInt(state.nombreElement + state.filtertable.getFirst(),10); i++)
                       {
                         state.tableauFiltre.push(bufTab[i]); 
                       }
-                    //state.tableauFiltre =state.tableauxGlobal;
-                    console.log(state.filtertable.getCurrentPage());
-                    console.log(state.nombreElement + state.filtertable.getCurrentPage());
+                    console.log(" CurrentPage = " + state.filtertable.getCurrentPage());
+                }
                 
             },
-            reverse()
+           /* reverse()
             {
                 this.state.tableauFiltre = this.state.tableauxGlobal.reverse();
                 this.update();
+            },*/
+            sort(e)
+            {
+                let cible = e.target.id
+                console.log(cible)
+                let all = document.getElementsByTagName('th')
+                let elem = document.getElementById(cible)
+                for(let i = 0; i < all.length; i++) {
+                    if(all[i] != elem)
+                        all[i].className = ''
+                }
+                if(elem.classList.contains('sorted')) {
+                    elem.classList.add('sorted_reverse')
+                    elem.classList.remove('sorted')
+                    if(cible == "Country")
+                        this.state.tableauFiltre = this.state.tableauxGlobal.sort((a, b) => (a[cible] > b[cible] ? -1 : 1))
+                    else
+                        this.state.tableauFiltre = this.state.tableauxGlobal.sort((a, b) => (parseInt(b[cible]) - parseInt(a[cible])))
+                } else if(elem.classList.contains('sorted_reverse')) {
+                    elem.classList.add('sorted')
+                    elem.classList.remove('sorted_reverse')
+                    if(cible == "Country")
+                        this.state.tableauFiltre = this.state.tableauxGlobal.sort((a, b) => (a[cible] < b[cible] ? -1 : 1))
+                    else
+                        this.state.tableauFiltre = this.state.tableauxGlobal.sort((a, b) => (parseInt(a[cible]) - parseInt(b[cible])))
+                } else {
+                    elem.classList.add('sorted')
+                    if(cible == "Country"){
+                        this.state.tableauFiltre = this.state.tableauxGlobal.sort((a, b) => (a[cible] < b[cible] ? -1 : 1))
+                    }
+                    else{
+                        this.state.tableauFiltre = this.state.tableauxGlobal.sort((a, b) => (parseInt(a[cible]) - parseInt(b[cible])))
+                    }
+                }
+                this.state.tableauFiltre = this.state.tableauxGlobal
+                this.update()
             },
             state: {
                 filtertable: null,
@@ -74,9 +115,23 @@
                 tableauFiltre : [],
                 tableauBuf : [],
                 nombreElement : 20,
-                currentPage : 0
+                first : 0
                 
             }
         }
     </script>
+
+    <style>
+    th:not(.sorted):not(.sorted_reverse):not(.sorted_nosort):after {
+    content: " \25B4\25BE"
+}
+
+.sorted:after {
+    content: " \25B4"
+}
+
+.sorted_reverse:after {
+    content: " \25BE"
+}
+    </style>
 </tableaucovid>
