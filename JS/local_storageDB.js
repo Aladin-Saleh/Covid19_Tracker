@@ -9,7 +9,7 @@ if (covid19Storage.isNew()) {
 
 window.onload=function()
 {
-        covid.updateLocalStorage()
+    covid.updateLocalStorage()
     var heure = document.getElementById("heure");
     var globalAffichage = document.getElementById("affichage");
 
@@ -94,8 +94,8 @@ let covid = {
         p.then(response =>
             {
                 //console.log(response.Countries);
-                covid19Storage.deleteRows("Info");    
-                covid19Storage.deleteRows("InfoGlobal");    
+                covid19Storage.deleteRows("Info");
+                covid19Storage.deleteRows("InfoGlobal");
                 covid19Storage.commit();
                 if (covid19Storage.isNew()) {
                     covid19Storage.createTable("Info",["Country","Date","NewConfirmed","NewDeaths","NewRecovered","TotalConfirmed","TotalDeaths","TotalRecovered"]);
