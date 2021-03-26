@@ -4,20 +4,29 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <script src="../JS/localstoragedb.js"></script>
+    <script src="../JS/local_storageDB.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="../JS/statCountry.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
 
     <h1 id="pays" style="text-align: center;"></h1>
     <title id="pays-title"></title>
+    <p style="text-align: center; color: red;">(Il se peut que vous ayez à recharger la page pour afficher les informations)</p>
 
 </head>
 <body >
+    <li>Mort</li>
+    <li style="color: #FF0066;">Cas</li>
+    <li style="color: #5BFF37;">Soigner</li>
 
 <div style="text-align: center;">
+    <h2>Cumul</h2>
+    
     <canvas id="canvas" height="700" width="1200">
     </canvas>
-    
+    <h2>Différenciel</h2>
+    <canvas id="canvasD" height="700" width="1200">
+    </canvas>
 </div>
     
 </body>

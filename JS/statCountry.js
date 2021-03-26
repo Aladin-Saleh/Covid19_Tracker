@@ -9,7 +9,8 @@ window.onload = function()
     document.getElementById("pays-title").innerHTML =pays;
     console.log(pays);
     fillStorage()
-    initCanvas()
+    drawCumul()
+    drawDif()
     //initGraph();
 }
 
@@ -21,28 +22,37 @@ var yScale;
 var canvas;
 var c;
 
-function initCanvas()
+function initCanvas(canvasid,val_max,pas)
 {
-    canvas = document.getElementById("canvas");
+    canvas = document.getElementById(canvasid);
 	c = canvas.getContext("2d");
-    Val_max = 1000000;
+    Val_max = val_max;
 	Val_min = 0;
-    var stepSize = 100000;
+    var stepSize = pas;
 	var columnSize = 30;
 	var rowSize = 30;
     sections = countryStorage.queryAll("Info"+pays).length;
 	var margin = 10;
     c.fillStyle = "#0099ff"
 	c.font = "20 pt Verdana"
-
-
+    
     yScale = (canvas.height - columnSize - margin) / (Val_max - Val_min);
 	xScale = (canvas.width - rowSize) / sections;
 
     c.strokeStyle="#000";
 	c.beginPath();
 
-   
+    let ind = 0;
+    for (i=1;i<=sections;i++) {
+		var x = i * xScale;
+        if (ind == 50) {
+            ind = 0;
+            c.fillText(countryStorage.queryAll("Info"+pays)[i].Date, x,columnSize - margin);
+        }
+        ind++;
+		//c.moveTo(x, columnSize);
+		c.lineTo(x, canvas.height - margin);
+	}
 
     var count =  0;
 	for (scale=Val_max;scale>=Val_min;scale = scale - stepSize) {
@@ -54,41 +64,116 @@ function initCanvas()
 	}
 	c.stroke();
 	
-
+    
     c.translate(rowSize,canvas.height + Val_min * yScale +  Val_min * yScale);
 	c.scale(1,-1 * yScale);
+}
 
+
+
+
+function setValMax() {
+    let buf = 0;
+console.log(covid.getCountryInfo());
+for (let index = 0; index < covid.getCountryInfo().length; index++) {
     
-    //console.log(countryStorage.queryAll("Info"+pays).Death);
-    //lineTo(x, y);
+    if (covid.getCountryInfo()[index].Country == pays) {
+        console.log("TROUVER" + covid.getCountryInfo()[index].Country);
+        buf = covid.getCountryInfo()[index].TotalConfirmed;
+        console.log(buf);
+    }
+    
+}
+
+return buf;
+    
+}
+
+function drawDif()
+{
+    initCanvas("canvasD",setValMax(),setValMax()/10)
+
     c.strokeStyle="#FF0066";
-    c.lineWidth = 5;
+    c.lineWidth = 10;
     c.beginPath();
+    let buf = 0;
     c.moveTo(0,countryStorage.queryAll("Info"+pays)[0].Active);
     for (let index = 0; index < sections; index++) {
-        c.lineTo(index * xScale,countryStorage.queryAll("Info"+pays)[index].Active);
-        console.log(countryStorage.queryAll("Info"+pays)[index].Active);
+        buf = parseInt(countryStorage.queryAll("Info"+pays)[index].Active,10);
+        c.lineTo(index * xScale,buf);
+        //console.log(buf/*countryStorage.queryAll("Info"+pays)[index].Active*/);
     }
     c.stroke();
 
 
     c.strokeStyle="#000000";
-    c.lineWidth = 5;
+    c.lineWidth = 100;
     c.beginPath();
+    buf = 0;
     c.moveTo(0,countryStorage.queryAll("Info"+pays)[0].Death);
     for (let index = 0; index < sections; index++) {
-        c.lineTo(index * xScale,countryStorage.queryAll("Info"+pays)[index].Death);
-        console.log(countryStorage.queryAll("Info"+pays)[index].Death);
+       // c.lineTo(index * xScale,countryStorage.queryAll("Info"+pays)[index].Death);
+       buf = parseInt(countryStorage.queryAll("Info"+pays)[index].Death,10);
+       c.lineTo(index * xScale,buf);
+        //console.log(/*countryStorage.queryAll("Info"+pays)[index].Death*/);
     }
     c.stroke();
    
     c.strokeStyle="#5BFF37";
-    c.lineWidth = 5;
+    c.lineWidth = 10;
     c.beginPath();
+    buf = 0;
     c.moveTo(0,countryStorage.queryAll("Info"+pays)[0].Recovered);
     for (let index = 0; index < sections; index++) {
-        c.lineTo(index * xScale,countryStorage.queryAll("Info"+pays)[index].Recovered);
-        console.log(countryStorage.queryAll("Info"+pays)[index].Recovered);
+        buf = parseInt(countryStorage.queryAll("Info"+pays)[index].Recovered,10);
+        c.lineTo(index * xScale,buf);
+        //console.log(countryStorage.queryAll("Info"+pays)[index].Recovered);
+    }
+    c.stroke();
+}
+function drawCumul()
+{
+  
+    initCanvas("canvas",setValMax()*100,setValMax()*10)
+
+    
+    console.log(countryStorage.queryAll("Info"+pays)[5].Date);
+    //lineTo(x, y);
+    c.strokeStyle="#FF0066";
+    c.lineWidth = 10;
+    c.beginPath();
+    let buf = 0;
+    c.moveTo(0,countryStorage.queryAll("Info"+pays)[0].Active);
+    for (let index = 0; index < sections; index++) {
+        buf += parseInt(countryStorage.queryAll("Info"+pays)[index].Active,10);
+        c.lineTo(index * xScale,buf);
+        //console.log(buf/*countryStorage.queryAll("Info"+pays)[index].Active*/);
+    }
+    c.stroke();
+
+
+    c.strokeStyle="#000000";
+    c.lineWidth = 50;
+    c.beginPath();
+    buf = 0;
+    c.moveTo(0,countryStorage.queryAll("Info"+pays)[0].Death);
+    for (let index = 0; index < sections; index++) {
+       // c.lineTo(index * xScale,countryStorage.queryAll("Info"+pays)[index].Death);
+       buf += parseInt(countryStorage.queryAll("Info"+pays)[index].Death,10);
+       c.lineTo(index * xScale,buf);
+        //console.log(/*countryStorage.queryAll("Info"+pays)[index].Death*/);
+    }
+    c.stroke();
+   
+    c.strokeStyle="#5BFF37";
+    c.lineWidth = 10;
+    c.beginPath();
+    buf = 0;
+    c.moveTo(0,countryStorage.queryAll("Info"+pays)[0].Recovered);
+    for (let index = 0; index < sections; index++) {
+        buf += parseInt(countryStorage.queryAll("Info"+pays)[index].Recovered,10);
+        c.lineTo(index * xScale,buf);
+        //console.log(countryStorage.queryAll("Info"+pays)[index].Recovered);
     }
     c.stroke();
     

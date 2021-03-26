@@ -25,6 +25,7 @@ window.onload=function()
 let covid = {
     
    // table : document.getElementById("table"),
+   
     showCountriesInfo()
     {
         //var cell = [];
