@@ -11,6 +11,7 @@ window.onload = function()
     fillStorage()
     drawCumul()
     drawDif()
+    drawWeek()
     //initGraph();
 }
 
@@ -22,7 +23,8 @@ var yScale;
 var canvas;
 var c;
 
-function initCanvas(canvasid,val_max,pas)
+
+function initCanvas(canvasid,val_max,pas,date)
 {
     canvas = document.getElementById(canvasid);
 	c = canvas.getContext("2d");
@@ -45,9 +47,11 @@ function initCanvas(canvasid,val_max,pas)
     let ind = 0;
     for (i=1;i<=sections;i++) {
 		var x = i * xScale;
-        if (ind == 50) {
+        if (ind == date) {
             ind = 0;
-            c.fillText(countryStorage.queryAll("Info"+pays)[i].Date, x,columnSize - margin);
+            //countryStorage.queryAll("Info"+pays)[i].Date
+            c.fillText(countryStorage.queryAll("Info"+pays)[i].Date, x,columnSize - margin)
+            
         }
         ind++;
 		//c.moveTo(x, columnSize);
@@ -89,9 +93,67 @@ return buf;
     
 }
 
+function drawWeek() {
+    initCanvas("canvasM",setValMax()*10,setValMax()/2,50)
+
+    c.strokeStyle="#FF0066";
+    c.lineWidth = 10;
+    c.beginPath();
+    let buf = 0;
+    let ind = 0;
+    c.moveTo(0,countryStorage.queryAll("Info"+pays)[0].Active);
+    for (let index = 0; index < sections; index++) {
+        buf += parseInt(countryStorage.queryAll("Info"+pays)[index].Active,10);
+        if (ind == 7) {
+            ind = 0;
+            c.lineTo(index * xScale,buf);
+            buf = 0;
+        }
+        ind++;
+        
+    }
+    c.stroke();
+
+    c.strokeStyle="#000000";
+    c.lineWidth = 10;
+    c.beginPath();
+    buf = 0;
+    ind = 0;
+    c.moveTo(0,countryStorage.queryAll("Info"+pays)[0].Death);
+    for (let index = 0; index < sections; index++) {
+        buf += parseInt(countryStorage.queryAll("Info"+pays)[index].Death,10);
+        if (ind == 7) {
+            ind = 0;
+            c.lineTo(index * xScale,buf);
+            buf = 0;
+        }
+        ind++;
+        
+    }
+    c.stroke();
+
+    c.strokeStyle="#5BFF37";
+    c.lineWidth = 10;
+    c.beginPath();
+    buf = 0;
+    ind = 0;
+    c.moveTo(0,countryStorage.queryAll("Info"+pays)[0].Recovered);
+    for (let index = 0; index < sections; index++) {
+        buf += parseInt(countryStorage.queryAll("Info"+pays)[index].Recovered,10);
+        if (ind == 7) {
+            ind = 0;
+            c.lineTo(index * xScale,buf);
+            buf = 0;
+        }
+        ind++;
+        
+    }
+    c.stroke();
+}
+
 function drawDif()
 {
-    initCanvas("canvasD",setValMax(),setValMax()/10)
+    initCanvas("canvasD",setValMax(),setValMax()/10,50)
 
     c.strokeStyle="#FF0066";
     c.lineWidth = 10;
@@ -134,7 +196,7 @@ function drawDif()
 function drawCumul()
 {
   
-    initCanvas("canvas",setValMax()*100,setValMax()*10)
+    initCanvas("canvas",setValMax()*100,setValMax()*10,50)
 
     
     console.log(countryStorage.queryAll("Info"+pays)[5].Date);
